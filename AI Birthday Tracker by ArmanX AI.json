@@ -1,0 +1,180 @@
+{
+  "name": "AI Birthday Tracker by ArmanX AI",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "7310dafd-aa2b-43b2-b71a-71d1ac6de379",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Check date: {{ $json['Readable date'] }} and check birthday date from google sheet if there is any one's birthday today then write a message according to relation and send the gmail and write Arman Ghayas in regards.",
+        "options": {
+          "systemMessage": "You are intelligent ai model, you have ability of accessing the google sheet and you have ability of sending email through gmail node."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "def9aa31-9630-47d4-b640-02b0f7790a01",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1xRMCAanCXUEcWutt4RV3DsJydT8T5B99-khLueKYzTo",
+          "mode": "list",
+          "cachedResultName": "birthday_list_with_emails",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xRMCAanCXUEcWutt4RV3DsJydT8T5B99-khLueKYzTo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2073692031,
+          "mode": "list",
+          "cachedResultName": "birthday_list_with_emails.csv",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xRMCAanCXUEcWutt4RV3DsJydT8T5B99-khLueKYzTo/edit#gid=2073692031"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        400,
+        224
+      ],
+      "id": "32d448d1-a27b-41dc-9273-f71eb8855b5d",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "EpaZcuaZH2qZJrp6",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        560,
+        224
+      ],
+      "id": "1ccb03e2-d119-40d7-a710-53dd39a2bd57",
+      "name": "Send a message in Gmail",
+      "webhookId": "73f028b0-9e53-425e-a597-e27b2b8b2551",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "AYUsCDkdW6f7jGsS",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        208,
+        224
+      ],
+      "id": "b63a7a90-89db-4867-a7eb-9a7e6c734346",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "S4MML5qmeiZyCTSb",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "deec4aca-6195-4ac5-b5be-a22156f582ce",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2acd3e053b48d1175e813efb93ff36e81c06feb5fd18da30a554cd9a9365e0b1"
+  },
+  "id": "BFTOJqX1ToVoNaS1",
+  "tags": []
+}
